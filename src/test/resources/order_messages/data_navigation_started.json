@@ -1,0 +1,20 @@
+{
+  "msgid":71662166001,
+  "msg_time":"2017-05-30T15:00:50Z",
+  "msg_class":8,
+  "msg_type":80000752,
+  "msg_text":"Navigation gestartet (Heilbronn central station)",
+  "objectno":"1078",
+  "odometer":0,
+  "pos_text":"",
+  "pos_params":"",
+  "pos_time":"2017-05-30T15:00:24Z",
+  "status":"",
+  "orderno":"110-11,30.05/1078#8",
+  "order_state":241,
+  "order_type":3,
+  "dest_text":"Heilbronn central station",
+  "eta":"2017-05-30T15:21:57Z",
+  "distance":15392,
+  "objectuid":"1-1-4667466220"
+}

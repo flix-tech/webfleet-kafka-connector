@@ -1,0 +1,20 @@
+{
+  "msgid":72812430703,
+  "msg_time":"2017-06-20T12:43:06Z",
+  "msg_class":4,
+  "msg_type":41100353,
+  "msg_text":"Spurdaten (4x)",
+  "objectno":"839",
+  "odometer":2800688,
+  "pos_latitude":46067793,
+  "pos_longitude":14509990,
+  "pos_text":"In Ljubljana (SI 1000)",
+  "pos_country":"SI",
+  "pos_postcode":"1000",
+  "pos_params":"zip=1000;country=SI;town1_name=Ljubljana;town1_country=SI;location_type=67;town1_zip=1000;",
+  "pos_time":"2017-06-20T12:43:03Z",
+  "speed":0,
+  "status":"A",
+  "surplus_data":{"fms_snapshotdata":{"fuel_level":479}},
+  "objectuid":"1-1-8809146169"
+}

@@ -1,0 +1,20 @@
+{
+  "msgid":72808266468,
+  "msg_time":"2017-06-20T11:52:08Z",
+  "msg_class":4,
+  "msg_type":41100353,
+  "msg_text":"Spurdaten (6x)",
+  "objectno":"1198",
+  "odometer":1252733,
+  "pos_latitude":51363008,
+  "pos_longitude":13738070,
+  "pos_text":"35 km N von Dresden,A13/E55 (DE 01990)",
+  "pos_country":"DE",
+  "pos_params":"zip=01990;country=DE;town1_name=Dresden;distance=34670;town1_country=DE;street=A13/E55;location_type=64;direction=N;",
+  "pos_time":"2017-06-20T11:52:05Z",
+  "speed":102,
+  "course":225,
+  "direction":6,
+  "status":"A",
+  "objectuid":"1-1-5301430A0E"
+}
