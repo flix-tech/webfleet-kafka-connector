@@ -5,7 +5,6 @@ package object kafka {
 
   object ConfigKeys{
     val TOPIC = "topic"
-    val ENV = "env"
     val WEBFLEET_API_ENDPOINT_URL = "webfleet.api.endpoint_url"
     val WEBFLEET_API_ACCOUNT = "webfleet.api.account"
     val WEBFLEET_API_USER = "webfleet.api.user"

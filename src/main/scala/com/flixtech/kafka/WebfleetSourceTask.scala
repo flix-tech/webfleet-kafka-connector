@@ -86,7 +86,6 @@ class WebfleetSourceTask(
     logger.info(s"Start WebfleetSourceTask with $props")
 
     topic = props.get(TOPIC)
-    env = props.get(ENV)
     webfleetEndpointUrl = props.get(WEBFLEET_API_ENDPOINT_URL)
     webfleetApiAccount = props.get(WEBFLEET_API_ACCOUNT)
     webfleetApiUser = props.get(WEBFLEET_API_USER)
