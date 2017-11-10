@@ -76,7 +76,6 @@ class WebfleetSourceTask(
   var api: BaseApi = _
   var metrics: BaseMetrics = _
   var topic: String = _
-  var env: String = _
   var webfleetEndpointUrl: String = _
   var webfleetApiAccount: String = _
   var webfleetApiUser: String = _
