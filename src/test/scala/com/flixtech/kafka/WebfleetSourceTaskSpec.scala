@@ -46,7 +46,6 @@ class WebfleetSourceTaskSpec extends FlatSpec with Matchers with MockitoSugar {
     val config: java.util.Map[String, String] = new java.util.HashMap[String, String]()
     config.put(ConfigKeys.TOPIC, "test_topic")
     config.put(WEBFLEET_API_PASSWORD_TABLE, "my_table")
-    config.put(ENV, "my_env")
     config.put(WEBFLEET_API_ACCOUNT, "my_account")
     config.put(WEBFLEET_API_USER, "my_user")
     config.put(WEBFLEET_API_PASSWORD, "my_password")
