@@ -36,14 +36,14 @@ class HttpApi(
 
   override def poll: Future[String] = {
     val future = transport.get(url, paramsWith(action = "popQueueMessagesExtern")).map { response =>
-      metrics.count(metricName = response.status.toString, dimensions = httpPoll)
+      metrics.count(name = response.status.toString)
       response.body
     }
 
     future.failed.foreach {
       case ex =>
         logger.error(s"error while fetching webfleet: $ex")
-        metrics.count(s"ERROR", dimensions = httpPoll)
+        metrics.count(name = "ERROR")
     }
     future
   }
@@ -52,11 +52,11 @@ class HttpApi(
 
   override def ack: Future[Unit] = {
     transport.get(url, paramsWith(action = "ackQueueMessagesExtern")).map { response =>
-      metrics.count(response.status.toString, dimensions = httpAck)
+      metrics.count(name = response.status.toString)
     }.recover {
       case ex =>
         logger.error(s"error while ack: $ex")
-        metrics.count(s"ACK_ERROR", dimensions = httpAck)
+        metrics.count(name = "ACK_ERROR")
     }
   }
 

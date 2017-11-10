@@ -43,7 +43,7 @@ class ApiSpec extends FlatSpec with Matchers with MockitoSugar {
     ))
     val body = Await.result(future, 1 second)
     body should be("http body")
-    verify(metrics).count("200", dimensions = httpPoll)
+    verify(metrics).count("200")
   }
   
   it should "forward the correct parameter to ack the queue" in new Context {
@@ -57,6 +57,6 @@ class ApiSpec extends FlatSpec with Matchers with MockitoSugar {
       "password" -> "my_password",
       "outputformat" -> "json"
     ))
-    verify(metrics).count("200", dimensions = httpAck)
+    verify(metrics).count("200")
   }
 }
