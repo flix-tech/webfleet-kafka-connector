@@ -6,10 +6,8 @@ import com.flixtech.Message.WebfleetMessage
 import com.flixtech.http.BaseApi
 import com.flixtech.kafka.ConfigKeys._
 import com.flixtech.kafka.WebfleetSourceTask.ParseResponse
-import com.flixtech.metrics.BaseMetrics
 import org.apache.kafka.connect.source.SourceRecord
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{verify, _}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, Matchers}
@@ -29,16 +27,14 @@ class WebfleetSourceTaskSpec extends FlatSpec with Matchers with MockitoSugar {
 
     def throttle() = Unit
 
-    val mockedMetrics = mock[BaseMetrics]
-
     val mockedNow = mock[Function0[Long]]
     when(mockedNow()).thenReturn(100l, 200l, 300l)
 
     val api = mock[BaseApi]
     when(api.poll).thenReturn(Future.successful("http response"))
 
-    val getApi = mock[(BaseMetrics, String, String, String, String) => BaseApi]
-    when(getApi.apply(any(classOf[BaseMetrics]), ArgumentMatchers.eq("my_account"), ArgumentMatchers.eq("my_user"), ArgumentMatchers.eq("my_password"), ArgumentMatchers.eq("http://endpoint"))).thenReturn(api)
+    val getApi = mock[(String, String, String, String) => BaseApi]
+    when(getApi.apply(ArgumentMatchers.eq("my_account"), ArgumentMatchers.eq("my_user"), ArgumentMatchers.eq("my_password"), ArgumentMatchers.eq("http://endpoint"))).thenReturn(api)
 
 
     val task = new WebfleetSourceTask(getApi, parser, throttle, mockedNow)

@@ -58,7 +58,7 @@ object WebfleetSourceTask extends LazyLogging {
 }
 
 class WebfleetSourceTask(
-                          getHttpApi: (BaseMetrics, String, String, String, String) => BaseApi,
+                          getHttpApi: (String, String, String, String) => BaseApi,
                           parser: (String) => ParseResponse,
                           throttle: () => Unit,
                           now: () => Long) extends SourceTask with LazyLogging {
@@ -75,7 +75,6 @@ class WebfleetSourceTask(
   }
 
   var api: BaseApi = _
-  var metrics: BaseMetrics = _
   var topic: String = _
   var webfleetEndpointUrl: String = _
   var webfleetApiAccount: String = _
@@ -92,9 +91,8 @@ class WebfleetSourceTask(
 
     webfleetApiPassword = getPassword(props)
 
-    metrics = new BaseMetrics
 
-    api = getHttpApi(metrics, webfleetApiAccount, webfleetApiUser, webfleetApiPassword, webfleetEndpointUrl)
+    api = getHttpApi(webfleetApiAccount, webfleetApiUser, webfleetApiPassword, webfleetEndpointUrl)
   }
 
   override def version() = webfleetSourceVersion
@@ -127,7 +125,7 @@ class WebfleetSourceTask(
 
       val ParseResponse(responseCount, webfleetMessages) = parser(httpBody)
 
-      metrics.count("INPUT_COUNT", responseCount)
+      BaseMetrics.count("INPUT_COUNT", responseCount)
 
       val output = webfleetMessages.map { webfleetMessage =>
 
@@ -149,16 +147,16 @@ class WebfleetSourceTask(
         (msg, webfleetMessage.msg_time)
       }
 
-      metrics.DURATION.setValue(duration)
+      BaseMetrics.DURATION.setValue(duration)
 
       val pollItems = output.size
       if (pollItems > 0) {
         val oldest = now() - output.map(_._2).min
         val youngest = now() - output.map(_._2).max
-        metrics.AGE_OLDEST.setValue(oldest)
-        metrics.AGE_YOUNGEST.setValue(youngest)
+        BaseMetrics.AGE_OLDEST.setValue(oldest)
+        BaseMetrics.AGE_YOUNGEST.setValue(youngest)
       }
-      metrics.count("OUTPUT_COUNT", pollItems)
+      BaseMetrics.count("OUTPUT_COUNT", pollItems)
 
       /**
         * we can wait for the Connect framework to commit - we need to do it right before we pull the next time

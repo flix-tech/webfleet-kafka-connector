@@ -1,7 +1,6 @@
 package com.flixtech.http
-import com.flixtech.metrics._
+
 import com.flixtech.metrics.BaseMetrics
-import com.jessecoyle.JCredStash
 import com.typesafe.scalalogging.LazyLogging
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -15,14 +14,13 @@ trait BaseApi extends LazyLogging {
 
 object HttpApi extends LazyLogging {
   def apply(
-             metrics: BaseMetrics,
              webfleetApiAccount: String,
              webfleetApiUsername: String,
              webfleetApiPassword: String,
              webfleetApiEndpointUrl: String
            ) = {
 
-    new HttpApi(webfleetApiEndpointUrl, webfleetApiAccount, webfleetApiUsername, webfleetApiPassword, HttpTransport, metrics)
+    new HttpApi(webfleetApiEndpointUrl, webfleetApiAccount, webfleetApiUsername, webfleetApiPassword, HttpTransport)
   }
 }
 
@@ -31,19 +29,18 @@ class HttpApi(
                account: String,
                user: String,
                password: String,
-               transport: Transport,
-               metrics: BaseMetrics) extends BaseApi {
+               transport: Transport) extends BaseApi {
 
   override def poll: Future[String] = {
     val future = transport.get(url, paramsWith(action = "popQueueMessagesExtern")).map { response =>
-      metrics.count(name = response.status.toString)
+      BaseMetrics.count(name = response.status.toString)
       response.body
     }
 
     future.failed.foreach {
       case ex =>
         logger.error(s"error while fetching webfleet: $ex")
-        metrics.count(name = "ERROR")
+        BaseMetrics.count(name = "ERROR")
     }
     future
   }
@@ -52,11 +49,11 @@ class HttpApi(
 
   override def ack: Future[Unit] = {
     transport.get(url, paramsWith(action = "ackQueueMessagesExtern")).map { response =>
-      metrics.count(name = response.status.toString)
+      BaseMetrics.count(name = response.status.toString)
     }.recover {
       case ex =>
         logger.error(s"error while ack: $ex")
-        metrics.count(name = "ACK_ERROR")
+        BaseMetrics.count(name = "ACK_ERROR")
     }
   }
 

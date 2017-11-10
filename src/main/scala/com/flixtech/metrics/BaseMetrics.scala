@@ -3,7 +3,7 @@ package com.flixtech.metrics
 import com.codahale.metrics.{Gauge, JmxReporter, MetricRegistry}
 import com.typesafe.scalalogging.LazyLogging
 
-class BaseMetrics extends LazyLogging {
+object BaseMetrics extends LazyLogging {
 
   private val metrics = new MetricRegistry()
 
