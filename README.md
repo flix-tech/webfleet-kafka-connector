@@ -1,5 +1,3 @@
-# Work in Progress
-
 # Webfleet Source Connector
 
 ## Introduction
