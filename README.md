@@ -1,4 +1,4 @@
-# Webfleet Source Connector
+# Webfleet Kafka Connector
 
 ## Introduction
 This connector consumes messages from webfleet API and publish to a Kafka topic.
