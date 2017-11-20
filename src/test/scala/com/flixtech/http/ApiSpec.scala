@@ -26,8 +26,7 @@ class ApiSpec extends FlatSpec with Matchers with MockitoSugar {
     when(mockedWSResponse.body).thenReturn("http body")
     when(mockedWSResponse.status).thenReturn(200)
     when(mockedTransport.get(any[String], any[Map[String, String]])).thenReturn(Future(mockedWSResponse))
-    val metrics = mock[BaseMetrics]
-    val api = new HttpApi(url, account, user, pwd, mockedTransport, metrics)
+    val api = new HttpApi(url, account, user, pwd, mockedTransport)
   }
 
   "Api call" should "forward the correct parameter to pop the queue" in new Context {
@@ -43,7 +42,6 @@ class ApiSpec extends FlatSpec with Matchers with MockitoSugar {
     ))
     val body = Await.result(future, 1 second)
     body should be("http body")
-    verify(metrics).count("200", dimensions = httpPoll)
   }
   
   it should "forward the correct parameter to ack the queue" in new Context {
@@ -57,6 +55,5 @@ class ApiSpec extends FlatSpec with Matchers with MockitoSugar {
       "password" -> "my_password",
       "outputformat" -> "json"
     ))
-    verify(metrics).count("200", dimensions = httpAck)
   }
 }

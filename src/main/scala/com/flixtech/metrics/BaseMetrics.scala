@@ -1,20 +1,40 @@
 package com.flixtech.metrics
 
-import java.util
-
+import com.codahale.metrics.{Gauge, JmxReporter, MetricRegistry}
 import com.typesafe.scalalogging.LazyLogging
 
-class BaseMetrics extends LazyLogging {
-  val namespace = "webfleet/connectSource"
+object BaseMetrics extends LazyLogging {
 
-  def start(props: util.Map[String, String]) = {}
+  private val metrics = new MetricRegistry()
 
-  def metric(metricName: String, value: Double, unit: String, dimensions: List[DimensionItem] = Nil): Unit = {}
+  val AGE_OLDEST = createGauge("AGE_OLDEST")
 
-  def count(metricName: String, value: Double = 1d, dimensions: List[DimensionItem] = Nil): Unit = {}
+  val AGE_YOUNGEST = createGauge("AGE_YOUNGEST")
 
-  def millis(metricName: String, value: Double, dimensions: List[DimensionItem] = Nil): Unit = {}
+  val DURATION = createGauge("DURATION")
+
+  def count(name: String, n: Long = 1) = {
+    metrics.counter(name).inc(n)
+  }
+
+
+  val reporter = JmxReporter.forRegistry(metrics).build()
+  reporter.start()
+
+  trait InternalGauge[T] extends Gauge[T] {
+    def setValue(_value: T)
+  }
+
+  private def createGauge(name: String): InternalGauge[Long] = {
+    val gauge = new InternalGauge[Long] {
+      var value: Long = 0
+
+      override def getValue = value
+
+      override def setValue(_value: Long) = value = _value
+    }
+    metrics.register(name, gauge)
+    gauge
+  }
 
 }
-
-case class DimensionItem(name: String, value: String)

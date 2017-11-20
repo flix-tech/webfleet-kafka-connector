@@ -17,6 +17,7 @@ import org.apache.kafka.connect.source.{SourceRecord, SourceTask}
 import scala.collection.JavaConverters._
 import scala.concurrent.Await
 import scala.concurrent.duration._
+import scala.language.postfixOps
 import scala.util.{Failure, Success, Try}
 
 object WebfleetSourceTask extends LazyLogging {
@@ -57,7 +58,7 @@ object WebfleetSourceTask extends LazyLogging {
 }
 
 class WebfleetSourceTask(
-                          getHttpApi: (BaseMetrics, String, String, String, String) => BaseApi,
+                          getHttpApi: (String, String, String, String) => BaseApi,
                           parser: (String) => ParseResponse,
                           throttle: () => Unit,
                           now: () => Long) extends SourceTask with LazyLogging {
@@ -74,7 +75,6 @@ class WebfleetSourceTask(
   }
 
   var api: BaseApi = _
-  var metrics: BaseMetrics = _
   var topic: String = _
   var webfleetEndpointUrl: String = _
   var webfleetApiAccount: String = _
@@ -91,10 +91,8 @@ class WebfleetSourceTask(
 
     webfleetApiPassword = getPassword(props)
 
-    metrics = getMetrics(props.get(METRICS_CLASS_NAME)).getOrElse(new BaseMetrics)
-    metrics.start(props)
 
-    api = getHttpApi(metrics, webfleetApiAccount, webfleetApiUser, webfleetApiPassword, webfleetEndpointUrl)
+    api = getHttpApi(webfleetApiAccount, webfleetApiUser, webfleetApiPassword, webfleetEndpointUrl)
   }
 
   override def version() = webfleetSourceVersion
@@ -127,7 +125,7 @@ class WebfleetSourceTask(
 
       val ParseResponse(responseCount, webfleetMessages) = parser(httpBody)
 
-      metrics.count("INPUT_COUNT", responseCount, ioMessage)
+      BaseMetrics.count("INPUT_COUNT", responseCount)
 
       val output = webfleetMessages.map { webfleetMessage =>
 
@@ -149,16 +147,16 @@ class WebfleetSourceTask(
         (msg, webfleetMessage.msg_time)
       }
 
-      metrics.millis("DURATION", duration, httpPoll)
+      BaseMetrics.DURATION.setValue(duration)
 
       val pollItems = output.size
       if (pollItems > 0) {
         val oldest = now() - output.map(_._2).min
         val youngest = now() - output.map(_._2).max
-        metrics.millis("AGE_OLDEST", oldest, ioMessage)
-        metrics.millis("AGE_YOUNGEST", youngest, ioMessage)
+        BaseMetrics.AGE_OLDEST.setValue(oldest)
+        BaseMetrics.AGE_YOUNGEST.setValue(youngest)
       }
-      metrics.count("OUTPUT_COUNT", pollItems, ioMessage)
+      BaseMetrics.count("OUTPUT_COUNT", pollItems)
 
       /**
         * we can wait for the Connect framework to commit - we need to do it right before we pull the next time
@@ -172,14 +170,6 @@ class WebfleetSourceTask(
       case Failure(ex) =>
         logger.error(s"Error while fetching: ${ex.getMessage}")
         List.empty.asJava
-    }
-  }
-
-  private def getMetrics(metricClassName: String): Option[BaseMetrics] = {
-    if (metricClassName == null) {
-      None
-    } else {
-      Some(Class.forName(metricClassName).newInstance().asInstanceOf[BaseMetrics])
     }
   }
 
