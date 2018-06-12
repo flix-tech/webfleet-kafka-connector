@@ -120,10 +120,10 @@ object Message {
   }
 
   object VehicleData {
-    def create(odometer: Option[Int], speed: Option[Int]): Option[VehicleData] = {
+    def create(speed: Option[Int], odometer: Option[Int]): Option[VehicleData] = {
       (odometer.isDefined, speed.isDefined) match {
         case (false, false) => None
-        case (_, _) => Some(new VehicleData(odometer, speed))
+        case (_, _) => Some(new VehicleData(speed, odometer))
       }
     }
   }
