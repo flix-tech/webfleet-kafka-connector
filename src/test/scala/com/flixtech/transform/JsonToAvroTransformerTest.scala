@@ -124,7 +124,6 @@ class JsonToAvroTransformerTest extends WordSpec with ScalaFutures with MockitoS
       assert("zip=01990;country=DE;town1_name=Dresden;distance=34670;town1_country=DE;street=A13/E55;location_type=64;direction=N;" === message.position_data.get.pos_params.get)
       assert("35 km N von Dresden,A13/E55 (DE 01990)" === message.position_data.get.pos_text.get)
       assert(message.position_data.get.pos_addrno === None)
-      webfleet-kafka-connector-geopamplona
     }
 
     "parse data navigation started" in {
