@@ -72,8 +72,8 @@ object JsonToAvroTransformer {
 
   private def parseVehicleData(jsonNode: ObjectNode): Option[VehicleData] =
     VehicleData.create(
-      parseInt(jsonNode, "odometer"),
-      parseInt(jsonNode, "speed")
+      parseInt(jsonNode, "speed"),
+      parseInt(jsonNode, "odometer")
     )
 
   private def parseNavigationData(jsonNode: ObjectNode, messageType: String): Option[NavigationData] = {
