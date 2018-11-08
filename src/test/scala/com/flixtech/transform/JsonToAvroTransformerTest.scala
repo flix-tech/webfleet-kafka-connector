@@ -6,9 +6,6 @@ import org.scalatest.WordSpec
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 
-/**
-  * Created by francescoditrani on 09/09/17.
-  */
 class JsonToAvroTransformerTest extends WordSpec with ScalaFutures with MockitoSugar {
 
   "JsonToAvroTransformer" should {

@@ -10,9 +10,6 @@ import com.flixtech.Message._
 import scala.collection.JavaConverters._
 import scala.util.Try
 
-/**
-  * Created by fditrani on 08/09/2017.
-  */
 object JsonToAvroTransformer {
 
   import WebfleetHelper._
