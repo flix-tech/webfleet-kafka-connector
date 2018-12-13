@@ -166,7 +166,10 @@ class WebfleetSourceTask(
     }
 
     Try(Await.result(api.poll, 20 seconds)) match {
-      case Success(httpBody) => validHttpFetch(httpBody)
+      case Success(Some(httpBody)) => validHttpFetch(httpBody)
+      case Success(None) =>
+        logger.error(s"None returned while fetching from webfleet")
+        List.empty.asJava
       case Failure(ex) =>
         logger.error(s"Error while fetching: ${ex.getMessage}")
         List.empty.asJava

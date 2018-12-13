@@ -31,7 +31,7 @@ class WebfleetSourceTaskSpec extends FlatSpec with Matchers with MockitoSugar {
     when(mockedNow()).thenReturn(100l, 200l, 300l)
 
     val api = mock[BaseApi]
-    when(api.poll).thenReturn(Future.successful("http response"))
+    when(api.poll).thenReturn(Future.successful(Some("http response")))
 
     val getApi = mock[(String, String, String, String) => BaseApi]
     when(getApi.apply(ArgumentMatchers.eq("my_account"), ArgumentMatchers.eq("my_user"), ArgumentMatchers.eq("my_password"), ArgumentMatchers.eq("http://endpoint"))).thenReturn(api)
@@ -77,5 +77,14 @@ class WebfleetSourceTaskSpec extends FlatSpec with Matchers with MockitoSugar {
     verify(api).ack
     verify(api, times(2)).poll
 
+  }
+
+  it should "return List.empty when api.poll() return None" in new Context {
+    when(api.poll).thenReturn(Future.successful(None))
+
+    val result = task.poll()
+    verify(api).poll
+
+    List.empty[SourceRecord].asJava should be(result)
   }
 }

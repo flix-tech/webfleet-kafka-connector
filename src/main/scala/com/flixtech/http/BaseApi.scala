@@ -7,7 +7,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait BaseApi extends LazyLogging {
-  def poll: Future[String]
+  def poll: Future[Option[String]]
 
   def ack: Future[Unit]
 }
@@ -31,10 +31,17 @@ class HttpApi(
                password: String,
                transport: Transport) extends BaseApi {
 
-  override def poll: Future[String] = {
+  override def poll: Future[Option[String]] = {
     val future = transport.get(url, paramsWith(action = "popQueueMessagesExtern")).map { response =>
-      BaseMetrics.count(name = response.status.toString)
-      response.body
+      response.status match {
+        case 200 =>
+          BaseMetrics.count(name = response.status.toString)
+          Some(response.body)
+        case status =>
+          logger.error(s"Status: $status when calling popQueueMessagesExtern")
+          None
+      }
+
     }
 
     future.failed.foreach {
@@ -42,6 +49,7 @@ class HttpApi(
         logger.error(s"error while fetching webfleet: $ex")
         BaseMetrics.count(name = "ERROR")
     }
+
     future
   }
 
