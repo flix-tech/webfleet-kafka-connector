@@ -1,6 +1,5 @@
 package com.flixtech.http
 
-import com.flixtech.metrics.BaseMetrics
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.scalatest._
@@ -10,8 +9,6 @@ import play.api.libs.ws.StandaloneWSResponse
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
-import com.flixtech.metrics._
-
 import scala.language.postfixOps
 
 class ApiSpec extends FlatSpec with Matchers with MockitoSugar {
@@ -41,8 +38,26 @@ class ApiSpec extends FlatSpec with Matchers with MockitoSugar {
       "outputformat" -> "json"
     ))
     val body = Await.result(future, 1 second)
-    body should be("http body")
+    body should be(Some("http body"))
   }
+
+  it should "return none in case response stats is 503" in new Context {
+    when(mockedWSResponse.status).thenReturn(503)
+
+    val future = api.poll
+    verify(mockedTransport).get(url, Map(
+      "lang" -> "en",
+      "action" -> "popQueueMessagesExtern",
+      "msgclass" -> "0",
+      "account" -> "my_account",
+      "username" -> "my_user",
+      "password" -> "my_password",
+      "outputformat" -> "json"
+    ))
+    val body = Await.result(future, 1 second)
+    body should be(None)
+  }
+
   
   it should "forward the correct parameter to ack the queue" in new Context {
     val future = Await.result(api.ack, 5 second)
