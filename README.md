@@ -1,7 +1,7 @@
 # Webfleet Kafka Connector
 
 ## Introduction
-This connector consumes messages from webfleet API and publish to a Kafka topic.
+This connector consumes messages from webfleet API (popQueueMessagesExtern) and publish to a Kafka topic.
 Messages are produced using Schema of webfleet (Schema Registry is required).
 You can check `com.flixtech.kafka.WebfleetSchema` for more details on the Webfleet message Schema.  
 
