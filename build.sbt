@@ -2,7 +2,7 @@ name := "webfleetKafkaConnector"
 
 version := "0.0.1"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.10"
 
 organization := "com.flixtech"
 
@@ -28,7 +28,7 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
   "io.dropwizard.metrics" % "metrics-core" % "3.2.5",
-  "org.mockito" % "mockito-core" % "2.9.0" % "test",
+  "org.mockito" % "mockito-core" % "3.4.0" % "test",
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 )
 
@@ -48,5 +48,4 @@ publishTo := {
     Some("Artifactory Realm" at artifactory + "libs-release-local")
 }
 
-//credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 credentials += Credentials(new File(".credentials"))
