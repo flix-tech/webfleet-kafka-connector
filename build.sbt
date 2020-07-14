@@ -2,7 +2,7 @@ name := "webfleetKafkaConnector"
 
 version := "0.0.1"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.10"
 
 organization := "com.flixtech"
 
@@ -48,5 +48,4 @@ publishTo := {
     Some("Artifactory Realm" at artifactory + "libs-release-local")
 }
 
-//credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 credentials += Credentials(new File(".credentials"))
